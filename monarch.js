@@ -16,13 +16,12 @@ Array.prototype.search = function(filters){
 			if(typeof filters=='object'){
 				for(filter in filters){
 					if(this[i][filter]!=filters[filter]){
-						passes=false
+						passes=false;
 					}
 				}
 			}else if (typeof filters=='function'){
 				passes = filters(this[i])
 			}
-			
 			
 			if(passes==true){
 				results.push(this[i]);
@@ -38,20 +37,23 @@ Monarch.subjects=[]
 
 
 
-jQuery.fn.bestow = function(subject_indicators,repeats_N,func){
+jQuery.fn.bestow = function(subject_indicators,iteration_N,func){
 	var subjects=[];
 	
-	if(!repeats_N>0){
-		repeats_N =0;
+	if(this.hasNotDeclared('subjects')){
+		this.declare('subjects',[])
 	}
 	
-	for(var repeats_n=0; repeats_n<repeats_N; repeats_n++){
+	
+	if(iteration_N==null){
+		var iteration_N=1;
+	}
+	
+	for(var iteration_n=0; iteration_n<iteration_N; iteration_n++){
 		if(typeof subject_indicators == 'string'){
 			var subject_strings = subject_indicators.split(',');
-	
 			for(i=0;i<subject_strings.length;i++){
 				var subject_string = subject_strings[i];
-				
 				var subjects_length = Monarch.subjects.length;
 				if(subjects_length>0){
 					var subject_id=Monarch.subjects[subjects_length-1].id+1
@@ -61,7 +63,11 @@ jQuery.fn.bestow = function(subject_indicators,repeats_N,func){
 				
 				var subject = {
 					id:		subject_id,
-					lord:	this
+					lord:	this,
+					iteration:{
+						n:iteration_n,
+						N:iteration_N
+						}
 					};
 			
 				var attribute = 'tag';
@@ -110,7 +116,6 @@ jQuery.fn.bestow = function(subject_indicators,repeats_N,func){
 					}
 				}
 				subjects.push(subject)
-				Monarch.subjects.push(subject);
 			}
 		}else{
 			subjects.push(subject_indicator)
@@ -148,20 +153,23 @@ jQuery.fn.bestow = function(subject_indicators,repeats_N,func){
 				break;	
 		}
 		
-		if(this.hasNotDeclared('subjects')){
-			this.declare('subjects',[])
-		}
 		this.subjects.push(
 			this.children().last().declare('lord',this)
 			)
-		if(typeof func=='function'){
-			func(this.children().last());	
+			
+		for(key in subject){
+			this.subjects[this.subjects.length-1].declare(key,subject[key]);
 		}
+		
+		if(typeof func=='function'){
+			func(this.subjects[this.subjects.length-1]);	
+		}
+		
+		Monarch.subjects.push(
+			this.subjects[this.subjects.length-1]
+		)
 	}
-	
-	
-	
-	
+
 	return this.subjects[this.subjects.length-1];
 }
 
