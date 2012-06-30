@@ -9,7 +9,7 @@ jQuery.fn.declare = function(property,value){
 	return this;
 }
 
-Array.prototype.search = function(filters){
+Array.prototype.search = function(filters,func){
 		var results = [];
 		for(var i=0;i<this.length;i++){
 			var passes = true;
@@ -24,6 +24,9 @@ Array.prototype.search = function(filters){
 			}
 			
 			if(passes==true){
+				if(typeof func == 'function'){
+					func(this[i]);
+				}
 				results.push(this[i]);
 			}	
 		}
@@ -160,6 +163,8 @@ jQuery.fn.bestow = function(subject_indicators,iteration_N,func){
 		for(key in subject){
 			this.subjects[this.subjects.length-1].declare(key,subject[key]);
 		}
+		
+		this.subjects[this.subjects.length-1][0].wrapper = this.subjects[this.subjects.length-1];
 		
 		if(typeof func=='function'){
 			func(this.subjects[this.subjects.length-1]);	
