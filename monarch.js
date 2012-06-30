@@ -38,78 +38,85 @@ Monarch.subjects=[]
 
 
 
-jQuery.fn.bestow = function(subject_indicators,func){
+jQuery.fn.bestow = function(subject_indicators,repeats_N,func){
 	var subjects=[];
 	
-	if(typeof subject_indicators == 'string'){
-		var subject_strings = subject_indicators.split(',');
-
-		for(i=0;i<subject_strings.length;i++){
-			var subject_string = subject_strings[i];
-			
-			var subjects_length = Monarch.subjects.length;
-			if(subjects_length>0){
-				var subject_id=Monarch.subjects[subjects_length-1].id+1
-			}else{
-				var subject_id=0;
-			}
-			
-			var subject = {
-				id:		subject_id,
-				lord:	this
-				};
-		
-			var attribute = 'tag';
-			for(var j=0;j<subject_string.length;j++){
-				var subject_char = subject_string.charAt(j);
+	if(!repeats>0){
+		repeats_N =0;
+	}
+	
+	for(var repeats_n=0; repeats_n<repeats_N; repeats_n++){
+		if(typeof subject_indicators == 'string'){
+			var subject_strings = subject_indicators.split(',');
+	
+			for(i=0;i<subject_strings.length;i++){
+				var subject_string = subject_strings[i];
 				
-				if($.inArray(subject_char),Monarch.indicators){
-					if(subject.hasNotDeclared('attributes')){
-						subject.attributes={};
-					}
+				var subjects_length = Monarch.subjects.length;
+				if(subjects_length>0){
+					var subject_id=Monarch.subjects[subjects_length-1].id+1
+				}else{
+					var subject_id=0;
+				}
+				
+				var subject = {
+					id:		subject_id,
+					lord:	this
+					};
+			
+				var attribute = 'tag';
+				for(var j=0;j<subject_string.length;j++){
+					var subject_char = subject_string.charAt(j);
 					
-					switch(subject_char){
-						case '#':
-							attribute = 'id';
-							subject.attributes.id=''
-							break;
-						case '.':
-							attribute = 'class';
-							if(subject.attributes.hasNotDeclared('classes')){
-								subject.attributes.classes=[''];
-							}else{
-								subject.attributes.classes.push('');
-							}
-							break;
-						case ',':
-							subjects.push(subject);
-							break;
-						default:
-							switch(attribute){
-								case 'id':
-									subject.attributes.id+=subject_char
-									break;
-								case 'class':
-									subject.attributes.classes[subject.attributes.classes.length-1]
-										= subject.attributes.classes[subject.attributes.classes.length-1]+subject_char;
-									break;
-								case 'tag':
-									//no attribute given, so its the tag
-									if(subject.hasNotDeclared('tag')){
-										subject.tag = '';
-									}
-									subject.tag+=subject_char;
-							}
-							break;
+					if($.inArray(subject_char),Monarch.indicators){
+						if(subject.hasNotDeclared('attributes')){
+							subject.attributes={};
+						}
+						
+						switch(subject_char){
+							case '#':
+								attribute = 'id';
+								subject.attributes.id=''
+								break;
+							case '.':
+								attribute = 'class';
+								if(subject.attributes.hasNotDeclared('classes')){
+									subject.attributes.classes=[''];
+								}else{
+									subject.attributes.classes.push('');
+								}
+								break;
+							case ',':
+								subjects.push(subject);
+								break;
+							default:
+								switch(attribute){
+									case 'id':
+										subject.attributes.id+=subject_char
+										break;
+									case 'class':
+										subject.attributes.classes[subject.attributes.classes.length-1]
+											= subject.attributes.classes[subject.attributes.classes.length-1]+subject_char;
+										break;
+									case 'tag':
+										//no attribute given, so its the tag
+										if(subject.hasNotDeclared('tag')){
+											subject.tag = '';
+										}
+										subject.tag+=subject_char;
+								}
+								break;
+						}
 					}
 				}
+				subjects.push(subject)
+				Monarch.subjects.push(subject);
 			}
-			subjects.push(subject)
-			Monarch.subjects.push(subject);
+		}else{
+			subjects.push(subject_indicator)
 		}
-	}else{
-		subjects.push(subject_indicator)
 	}
+	
 		
 	for(var i=0;i<subjects.length;i++){
 		var subject = subjects[i];
