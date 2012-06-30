@@ -1,0 +1,160 @@
+Object.prototype.hasNotDeclared = function(property) {
+	//Checks if an object has been given a property
+    return this[property] == undefined;
+};
+	
+jQuery.fn.declare = function(property,value){
+	//Gives an object a property and returns the object
+	this[property]=value;
+	return this;
+}
+
+Array.prototype.search = function(filters){
+		var results = [];
+		for(var i=0;i<this.length;i++){
+			var passes = true;
+			if(typeof filters=='object'){
+				for(filter in filters){
+					if(this[i][filter]!=filters[filter]){
+						passes=false
+					}
+				}
+			}else if (typeof filters=='function'){
+				passes = filters(this[i])
+			}
+			
+			
+			if(passes==true){
+				results.push(this[i]);
+			}	
+		}
+		return results;
+	}
+
+var Monarch = {}
+Monarch.indicators = ['#','.',','];
+Monarch.subjects=[]
+
+
+
+
+jQuery.fn.bestow = function(subject_indicators,func){
+	var subjects=[];
+	
+	if(typeof subject_indicators == 'string'){
+		var subject_strings = subject_indicators.split(',');
+
+		for(i=0;i<subject_strings.length;i++){
+			var subject_string = subject_strings[i];
+			
+			var subjects_length = Monarch.subjects.length;
+			if(subjects_length>0){
+				var subject_id=Monarch.subjects[subjects_length-1].id+1
+			}else{
+				var subject_id=0;
+			}
+			
+			var subject = {
+				id:		subject_id,
+				lord:	this
+				};
+		
+			var attribute = 'tag';
+			for(var j=0;j<subject_string.length;j++){
+				var subject_char = subject_string.charAt(j);
+				
+				if($.inArray(subject_char),Monarch.indicators){
+					if(subject.hasNotDeclared('attributes')){
+						subject.attributes={};
+					}
+					
+					switch(subject_char){
+						case '#':
+							attribute = 'id';
+							subject.attributes.id=''
+							break;
+						case '.':
+							attribute = 'class';
+							if(subject.attributes.hasNotDeclared('classes')){
+								subject.attributes.classes=[''];
+							}else{
+								subject.attributes.classes.push('');
+							}
+							break;
+						case ',':
+							subjects.push(subject);
+							break;
+						default:
+							switch(attribute){
+								case 'id':
+									subject.attributes.id+=subject_char
+									break;
+								case 'class':
+									subject.attributes.classes[subject.attributes.classes.length-1]
+										= subject.attributes.classes[subject.attributes.classes.length-1]+subject_char;
+									break;
+								case 'tag':
+									//no attribute given, so its the tag
+									if(subject.hasNotDeclared('tag')){
+										subject.tag = '';
+									}
+									subject.tag+=subject_char;
+							}
+							break;
+					}
+				}
+			}
+			subjects.push(subject)
+			Monarch.subjects.push(subject);
+		}
+	}else{
+		subjects.push(subject_indicator)
+	}
+		
+	for(var i=0;i<subjects.length;i++){
+		var subject = subjects[i];
+		var selector = null;
+		
+		var attributes_string='';
+		
+		for (var subject_attribute in subject.attributes){
+			switch(subject_attribute){
+				case 'classes':
+					attributes_string+=' class="';
+					for(var j = 0; j<subject.attributes.classes.length; j++){
+						attributes_string+=' '+subject.attributes.classes[j];
+					}
+					attributes_string+='"';
+					break;
+				case 'id':
+					attributes_string+=' id="'+subject.attributes.id+'"';
+					break;
+			}
+		}
+		
+		switch(subject.tag){
+			case 'img':
+				this.append('<'+subject.tag+' '+attributes_string+'/>')
+				break;
+			default:
+				this.append('<'+subject.tag+' '+attributes_string+'></'+subject.tag+'>')	
+				break;	
+		}
+		
+		if(this.hasNotDeclared('subjects')){
+			this.declare('subjects',[])
+		}
+		this.subjects.push(
+			this.children().last().declare('lord',this)
+			)
+		if(typeof func=='function'){
+			func(this.children().last());	
+		}
+	}
+	
+	
+	
+	
+	return this.subjects[this.subjects.length-1];
+}
+
