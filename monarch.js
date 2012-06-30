@@ -41,7 +41,7 @@ Monarch.subjects=[]
 jQuery.fn.bestow = function(subject_indicators,repeats_N,func){
 	var subjects=[];
 	
-	if(!repeats>0){
+	if(!repeats_N>0){
 		repeats_N =0;
 	}
 	
