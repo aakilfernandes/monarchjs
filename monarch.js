@@ -79,7 +79,7 @@ jQuery.fn.bestow = function(subject_indicators,iteration_N,func){
 					var subject_char = subject_string.charAt(j);
 					
 					if($.inArray(subject_char),Monarch.indicators){
-						if(subject.hasNotDeclared('attributes')){
+						if(subject.attributes == undefined){
 							subject.attributes={};
 						}
 						
@@ -90,7 +90,7 @@ jQuery.fn.bestow = function(subject_indicators,iteration_N,func){
 								break;
 							case '.':
 								attribute = 'class';
-								if(subject.attributes.hasNotDeclared('classes')){
+								if(subject.attributes.classes == undefined){
 									subject.attributes.classes=[''];
 								}else{
 									subject.attributes.classes.push('');
@@ -110,7 +110,7 @@ jQuery.fn.bestow = function(subject_indicators,iteration_N,func){
 										break;
 									case 'tag':
 										//no attribute given, so its the tag
-										if(subject.hasNotDeclared('tag')){
+										if(subject.tag == undefined){
 											subject.tag = '';
 										}
 										subject.tag+=subject_char;
