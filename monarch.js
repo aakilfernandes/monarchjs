@@ -1,13 +1,14 @@
-Object.prototype.hasNotDeclared = function(property) {
-	//Checks if an object has been given a property
-    return this[property] == undefined;
-};
-	
 jQuery.fn.declare = function(property,value){
 	//Gives an object a property and returns the object
 	this[property]=value;
 	return this;
 }
+
+jQuery.fn.hasNotDeclared = function(property) {
+	//Checks if an object has been given a property
+    return this[property] == undefined;
+};
+
 
 Array.prototype.search = function(filters,func){
 		var results = [];
