@@ -145,9 +145,7 @@ jQuery.fn.bestow = function(monarch_indicators,N,func){
 		monarch_DOM[0].monarch=monarch_DOM;
 		
 		//transfer data from monarch to monarch_DOM
-		console.log(monarch);
 		for(key in monarch){
-			console.log(key);
 			monarch_DOM.declare(key,monarch[key]);
 		}
 		
