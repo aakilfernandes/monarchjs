@@ -1,185 +1,164 @@
+jQuery.fn.unique = function(){
+	return this[0].unique;
+}
+
 jQuery.fn.declare = function(property,value){
-	//Gives an object a property and returns the object
 	this[property]=value;
 	return this;
 }
 
 jQuery.fn.hasNotDeclared = function(property) {
-	//Checks if an object has been given a property
     return this[property] == undefined;
 };
 
-jQuery.fn.unique = function(){
-	return this[0].unique;
+jQuery.fn.monarch = function(){
+	return this[0].monarch;
 }
 
-
-Array.prototype.search = function(filters,func){
+jQuery.fn.findMonarchs = function(filters,func){
 		var results = [];
 		for(var i=0;i<this.length;i++){
 			var passes = true;
 			if(typeof filters=='object'){
 				for(filter in filters){
-					if(this[i][filter]!=filters[filter]){
+					if(this[i].monarch[filter]!=filters[filter]){
 						passes=false;
 					}
 				}
 			}else if (typeof filters=='function'){
-				passes = filters(this[i])
+				passes = filters(this[i].monarch)
 			}
 			
 			if(passes==true){
 				if(typeof func == 'function'){
-					func(this[i]);
+					func(this[i].monarch);
 				}
-				results.push(this[i]);
+				results.push(this[i].monarch);
 			}	
 		}
 		return results;
 	}
 
-var Monarch = {}
-Monarch.indicators = ['#','.',','];
-Monarch.subjects=[]
 
 
 
 
-jQuery.fn.bestow = function(subject_indicators,iteration_N,func){
-	var subjects=[];
+jQuery.fn.bestow = function(monarch_indicators,N,func){
+	var monarchs=[];
+	var indicators = ['#','.',','];	
 	
-	if(this.hasNotDeclared('subjects')){
-		this.declare('subjects',[])
+	if(N==undefined){
+		var N=1;
 	}
 	
-	
-	if(iteration_N==null){
-		var iteration_N=1;
-	}
-	
-	for(var iteration_n=0; iteration_n<iteration_N; iteration_n++){
-		if(typeof subject_indicators == 'string'){
-			var subject_strings = subject_indicators.split(',');
-			for(i=0;i<subject_strings.length;i++){
-				var subject_string = subject_strings[i];
-				var subjects_length = Monarch.subjects.length;
-				if(subjects_length>0){
-					var subject_id=Monarch.subjects[subjects_length-1].id+iteration_n+1
-				}else{
-					var subject_id=0;
-				}
+	for(var n=0; n<N; n++){
+		var monarch_strings = monarch_indicators.split(',');
+		for(i=0;i<monarch_strings.length;i++){
+			var monarch_string = monarch_strings[i];
+			var monarch = {
+				id:		Math.random(),
+				lord:	this,
+				n:n,
+				N:N
+			}
+			var attribute = 'tag';
+			for(var j=0;j<monarch_string.length;j++){
+				var monarch_char = monarch_string.charAt(j);
 				
-				var subject = {
-					id:		subject_id,
-					lord:	this,
-					iteration:{
-						n:iteration_n,
-						N:iteration_N
-						}
-					};
-			
-				var attribute = 'tag';
-				for(var j=0;j<subject_string.length;j++){
-					var subject_char = subject_string.charAt(j);
+				if($.inArray(monarch_char),indicators){
+					if(monarch.attributes == undefined){
+						monarch.attributes={};
+					}
 					
-					if($.inArray(subject_char),Monarch.indicators){
-						if(subject.attributes == undefined){
-							subject.attributes={};
-						}
-						
-						switch(subject_char){
-							case '#':
-								attribute = 'id';
-								subject.attributes.id=''
-								break;
-							case '.':
-								attribute = 'class';
-								if(subject.attributes.classes == undefined){
-									subject.attributes.classes=[''];
-								}else{
-									subject.attributes.classes.push('');
-								}
-								break;
-							case ',':
-								subjects.push(subject);
-								break;
-							default:
-								switch(attribute){
-									case 'id':
-										subject.attributes.id+=subject_char
-										break;
-									case 'class':
-										subject.attributes.classes[subject.attributes.classes.length-1]
-											= subject.attributes.classes[subject.attributes.classes.length-1]+subject_char;
-										break;
-									case 'tag':
-										//no attribute given, so its the tag
-										if(subject.tag == undefined){
-											subject.tag = '';
-										}
-										subject.tag+=subject_char;
-								}
-								break;
-						}
+					switch(monarch_char){
+						case '#':
+							attribute = 'id';
+							monarch.attributes.id=''
+							break;
+						case '.':
+							attribute = 'class';
+							if(monarch.attributes.classes == undefined){
+								monarch.attributes.classes=[''];
+							}else{
+								monarch.attributes.classes.push('');
+							}
+							break;
+						case ',':
+							monarchs.push(monarch);
+							break;
+						default:
+							switch(attribute){
+								case 'id':
+									monarch.attributes.id+=monarch_char
+									break;
+								case 'class':
+									monarch.attributes.classes[monarch.attributes.classes.length-1]
+										= monarch.attributes.classes[monarch.attributes.classes.length-1]+monarch_char;
+									break;
+								case 'tag':
+									//no attribute given, so its the tag
+									if(monarch.tag == undefined){
+										monarch.tag = '';
+									}
+									monarch.tag+=monarch_char;
+							}
+							break;
 					}
 				}
-				subjects.push(subject)
 			}
-		}else{
-			subjects.push(subject_indicator)
+			monarchs.push(monarch)
 		}
 	}
 	
 		
-	for(var i=0;i<subjects.length;i++){
-		var subject = subjects[i];
+	for(var i=0;i<monarchs.length;i++){
+		var monarch = monarchs[i];
 		var selector = null;
 		
 		var attributes_string='';
 		
-		for (var subject_attribute in subject.attributes){
-			switch(subject_attribute){
+		for (var monarch_attribute in monarch.attributes){
+			switch(monarch_attribute){
 				case 'classes':
 					attributes_string+=' class="';
-					for(var j = 0; j<subject.attributes.classes.length; j++){
-						attributes_string+=' '+subject.attributes.classes[j];
+					for(var j = 0; j<monarch.attributes.classes.length; j++){
+						attributes_string+=' '+monarch.attributes.classes[j];
 					}
 					attributes_string+='"';
 					break;
 				case 'id':
-					attributes_string+=' id="'+subject.attributes.id+'"';
+					attributes_string+=' id="'+monarch.attributes.id+'"';
 					break;
 			}
 		}
 		
-		switch(subject.tag){
+		switch(monarch.tag){
 			case 'img':
-				this.append('<'+subject.tag+' '+attributes_string+'/>')
+				this.append('<'+monarch.tag+' '+attributes_string+'/>')
 				break;
 			default:
-				this.append('<'+subject.tag+' '+attributes_string+'></'+subject.tag+'>')	
+				this.append('<'+monarch.tag+' '+attributes_string+'></'+monarch.tag+'>')	
 				break;	
 		}
 		
-		this.subjects.push(
-			this.children().last().declare('lord',this)
-			)
-			
-		for(key in subject){
-			this.subjects[this.subjects.length-1].declare(key,subject[key]);
+		var monarch_DOM=this.children().last();
+		monarch_DOM[0].monarch=monarch_DOM;
+		
+		//transfer data from monarch to monarch_DOM
+		console.log(monarch);
+		for(key in monarch){
+			console.log(key);
+			monarch_DOM.declare(key,monarch[key]);
 		}
 		
-		this.subjects[this.subjects.length-1][0].unique = this.subjects[this.subjects.length-1];
+		monarch=monarch_DOM
+
+		if(func != undefined){
+			func(monarch);	
+		}	
 		
-		if(typeof func=='function'){
-			func(this.subjects[this.subjects.length-1]);	
-		}
-		
-		Monarch.subjects.push(
-			this.subjects[this.subjects.length-1]
-		)
 	}
 
-	return this.subjects[this.subjects.length-1];
+	return monarch;
 }
 
