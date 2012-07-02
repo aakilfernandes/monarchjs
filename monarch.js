@@ -64,7 +64,7 @@ jQuery.fn.bestow = function(subject_indicators,iteration_N,func){
 				var subject_string = subject_strings[i];
 				var subjects_length = Monarch.subjects.length;
 				if(subjects_length>0){
-					var subject_id=Monarch.subjects[subjects_length-1].id+1
+					var subject_id=Monarch.subjects[subjects_length-1].id+j
 				}else{
 					var subject_id=0;
 				}
