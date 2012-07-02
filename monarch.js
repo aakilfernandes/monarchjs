@@ -9,6 +9,10 @@ jQuery.fn.hasNotDeclared = function(property) {
     return this[property] == undefined;
 };
 
+jQuery.fn.unique = function(){
+	return this[0].unique;
+}
+
 
 Array.prototype.search = function(filters,func){
 		var results = [];
@@ -165,7 +169,7 @@ jQuery.fn.bestow = function(subject_indicators,iteration_N,func){
 			this.subjects[this.subjects.length-1].declare(key,subject[key]);
 		}
 		
-		this.subjects[this.subjects.length-1][0].wrapper = this.subjects[this.subjects.length-1];
+		this.subjects[this.subjects.length-1][0].unique = this.subjects[this.subjects.length-1];
 		
 		if(typeof func=='function'){
 			func(this.subjects[this.subjects.length-1]);	
