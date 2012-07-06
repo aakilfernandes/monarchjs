@@ -43,7 +43,8 @@ jQuery.fn.findMonarchs = function(filters,func){
 
 
 
-jQuery.fn.bestow = function(monarch_indicators,N,func){
+jQuery.fn.bestow = function(monarch_indicators,N,func,gate){
+	if(gate){
 	var monarchs=[];
 	var indicators = ['#','.',','];	
 	
@@ -156,7 +157,7 @@ jQuery.fn.bestow = function(monarch_indicators,N,func){
 		}	
 		
 	}
-
+	}
 	return monarch;
 }
 
