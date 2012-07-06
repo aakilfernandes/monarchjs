@@ -44,8 +44,6 @@ jQuery.fn.findMonarchs = function(filters,func){
 
 
 jQuery.fn.bestow = function(monarch_indicators,N,func,gate){
-	console.log(monarch_indicators);
-	console.log(gate);
 	if(gate == undefined){gate=true};
 	console.log(gate);
 	if(gate){
