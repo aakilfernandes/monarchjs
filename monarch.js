@@ -44,9 +44,8 @@ jQuery.fn.findMonarchs = function(filters,func){
 
 
 jQuery.fn.bestow = function(monarch_indicators,N,func,gate){
-	if(gate == undefined){gate=true};
-	console.log(gate);
-	if(gate){
+	if(gate == undefined){gate=null};
+
 	var monarchs=[];
 	var indicators = ['#','.',','];	
 	
@@ -62,7 +61,8 @@ jQuery.fn.bestow = function(monarch_indicators,N,func,gate){
 				id:		Math.random(),
 				lord:	this,
 				n:n,
-				N:N
+				N:N,
+				gate:	gate	
 			}
 			var attribute = 'tag';
 			for(var j=0;j<monarch_string.length;j++){
@@ -153,13 +153,18 @@ jQuery.fn.bestow = function(monarch_indicators,N,func,gate){
 		}
 		
 		monarch=monarch_DOM
+		
+		if(monarch.gate===false){
+			monarch.addClass('failed_gate');
+		}
 
 		if(func != undefined){
 			func(monarch);	
-		}	
+		}
 		
 	}
-	}
+	
 	return monarch;
+	
 }
 
